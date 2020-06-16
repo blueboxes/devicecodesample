@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e4701f2d-dda9-4e2f-ad2b-a26510ec51a0",
+		"_postman_id": "2d9d3733-c44c-4e0f-9075-f3afaed8cbb7",
 		"name": "Device Auth",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,10 +11,10 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4f8831b7-012f-4a47-9d63-7e97d95ca1f7",
+						"id": "9950a970-6482-4e20-8b83-d3acf5e400fe",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);\r",
-							"postman.collectionVariables.set(\"DeviceCode\", jsonData.device_code);\r",
+							"pm.collectionVariables.set(\"DeviceCode\", jsonData.device_code);\r",
 							"\r",
 							"tests[\"Status code is 200\"] = responseCode.code === 200;"
 						],
@@ -33,7 +33,7 @@
 					"urlencoded": [
 						{
 							"key": "client_id",
-							"value": "85fb4d74-898f-4f57-934e-a1811364db35",
+							"value": "{{ClientId}}",
 							"type": "text"
 						},
 						{
@@ -46,7 +46,10 @@
 							"value": "https://graph.microsoft.com",
 							"type": "text"
 						}
-					]
+					],
+					"options": {
+						"urlencoded": {}
+					}
 				},
 				"url": {
 					"raw": "https://login.microsoftonline.com/{{TenantId}}/oauth2/devicecode",
@@ -67,6 +70,22 @@
 		},
 		{
 			"name": "Poll for Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eb547e04-2e3b-4b64-ac59-4408cb745d78",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);\r",
+							"pm.collectionVariables.set(\"RefreshToken\", jsonData.refresh_token);\r",
+							"\r",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -78,7 +97,7 @@
 					"urlencoded": [
 						{
 							"key": "client_id",
-							"value": "85fb4d74-898f-4f57-934e-a1811364db35",
+							"value": "{{ClientId}}",
 							"type": "text"
 						},
 						{
@@ -88,13 +107,16 @@
 						},
 						{
 							"key": "code",
-							"value": "DAQABAAEAAAAm-06blBE1TpVMil8KPQ41Dh3E5axqcfSn6InfwkQgGiJYgr4xJ0SRJ8dc4uapSAGWk94GOyE-FfCvpZ5GunhxHztwI1a8QYt1n7ODCGHQdxB_L-6owkMgAnYXasMhhEUpNCoQ2WcOBeXJ3mDRBO6nvHGPL7hi6OaMaqnU2xzBs4AYJ406Jcrj2LVApvLk2a4gAA",
+							"value": "{{DeviceCode}}",
 							"type": "text"
 						}
-					]
+					],
+					"options": {
+						"urlencoded": {}
+					}
 				},
 				"url": {
-					"raw": "https://login.microsoftonline.com/4558062b-f9ef-42f5-b07c-dd79c9bcd6ad/oauth2/token",
+					"raw": "https://login.microsoftonline.com/{{TenantId}}/oauth2/token",
 					"protocol": "https",
 					"host": [
 						"login",
@@ -102,7 +124,7 @@
 						"com"
 					],
 					"path": [
-						"4558062b-f9ef-42f5-b07c-dd79c9bcd6ad",
+						"{{TenantId}}",
 						"oauth2",
 						"token"
 					]
@@ -118,7 +140,7 @@
 					"oauth2": [
 						{
 							"key": "accessToken",
-							"value": "eyJ0eXAiOiJKV1QiLCJub25jZSI6IkdJQklZRXhGVXVfTnd4djlyV0FUaDdVS2xGWXF3enNkNV9IOFFkY3J5Y0kiLCJhbGciOiJSUzI1NiIsIng1dCI6IkN0VHVoTUptRDVNN0RMZHpEMnYyeDNRS1NSWSIsImtpZCI6IkN0VHVoTUptRDVNN0RMZHpEMnYyeDNRS1NSWSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC80NTU4MDYyYi1mOWVmLTQyZjUtYjA3Yy1kZDc5YzliY2Q2YWQvIiwiaWF0IjoxNTkwMTc2Njc4LCJuYmYiOjE1OTAxNzY2NzgsImV4cCI6MTU5MDE4MDU3OCwiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IjQyZGdZQWk0TFhFNVVOTkFLSGgxN2NMbEMrWXdkWng5M05XL2ZxbEZoL2J6ZVk1dDVaOEIiLCJhbXIiOlsicHdkIl0sImFwcF9kaXNwbGF5bmFtZSI6IlRlYW1zU3RhdHVzIiwiYXBwaWQiOiI4NWZiNGQ3NC04OThmLTRmNTctOTM0ZS1hMTgxMTM2NGRiMzUiLCJhcHBpZGFjciI6IjAiLCJmYW1pbHlfbmFtZSI6IktpbG1pc3RlciIsImdpdmVuX25hbWUiOiJKb2huIiwiaXBhZGRyIjoiNTEuMTQ2Ljg5LjExMyIsIm5hbWUiOiJKb2huIEtpbG1pc3RlciIsIm9pZCI6ImEzYmVhNWQ5LTE4OGQtNDlkNS1iOWYzLWE2MmRhNjJjMDdkNyIsIm9ucHJlbV9zaWQiOiJTLTEtNS0yMS0xOTM2MTcxNzM5LTEyOTUyNDEyMzUtMjA0MzgzNzYwLTM5NDYiLCJwbGF0ZiI6IjE0IiwicHVpZCI6IjEwMDMwMDAwOTNFQURBQzgiLCJzY3AiOiJQcmVzZW5jZS5SZWFkIiwic2lnbmluX3N0YXRlIjpbImttc2kiXSwic3ViIjoid0dhR1ZzaEdsV3JHM3I2QjRxQW1vZGFMVXp0dlJsVHZXMDB3SEJCQ2FkcyIsInRpZCI6IjQ1NTgwNjJiLWY5ZWYtNDJmNS1iMDdjLWRkNzljOWJjZDZhZCIsInVuaXF1ZV9uYW1lIjoiSm9obi5LaWxtaXN0ZXJAcHVyZWd5bS5jb20iLCJ1cG4iOiJKb2huLktpbG1pc3RlckBwdXJlZ3ltLmNvbSIsInV0aSI6IlF5UzNJZlJ6M2syckZWa3R0YXNwQUEiLCJ2ZXIiOiIxLjAiLCJ4bXNfdGNkdCI6MTM3NjU1MTc0M30.YG-n_tOGZxwYWfpm12qdVnsMB0EyIPvX9ZCQ9KepnAcCbxejW17xwHNb-cYXURqQu2dPK7vZoTAoO46i7lMe3b30Vinc2OCCD9njczXHdf-rd8dxZ7paHlJ7JVU0SgcCnqOJL6m8iiOhlzyPUni6wfYtchv9ZNXufrIsskkkLtG5DZB7hBZhynm1sZNSsX27ieQBwItO1wx0zhAj4oKB79vwakAGAdgp_7f6IXYVAOCAlXSHSzPKBG3A2zfvvtCTLgCHCmJMfP8ibCtqU1I2CP8uPEpWechXNSEr2KPBTJCEPakwACaf6KyRQfkDs6TsOCQiMMTaCO2bCE9hA3Ji7w",
+							"value": "{{AccessToken}}",
 							"type": "string"
 						},
 						{
@@ -131,7 +153,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://graph.microsoft.com/beta/me/presence",
+					"raw": "https://graph.microsoft.com/v1.0/me/",
 					"protocol": "https",
 					"host": [
 						"graph",
@@ -139,9 +161,9 @@
 						"com"
 					],
 					"path": [
-						"beta",
+						"v1.0",
 						"me",
-						"presence"
+						""
 					]
 				}
 			},
@@ -157,7 +179,7 @@
 					"urlencoded": [
 						{
 							"key": "client_id",
-							"value": "85fb4d74-898f-4f57-934e-a1811364db35",
+							"value": "{{ClientId}}",
 							"type": "text"
 						},
 						{
@@ -171,20 +193,17 @@
 							"type": "text"
 						},
 						{
-							"key": "access_token",
-							"value": "eyJ0eXAiOiJKV1QiLCJub25jZSI6IjR2eVppZGd5OUJNUTNtclBlR0YteVBkZHFiZFViYS1QMC1BMHRCMGxhRVkiLCJhbGciOiJSUzI1NiIsIng1dCI6IkN0VHVoTUptRDVNN0RMZHpEMnYyeDNRS1NSWSIsImtpZCI6IkN0VHVoTUptRDVNN0RMZHpEMnYyeDNRS1NSWSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC80NTU4MDYyYi1mOWVmLTQyZjUtYjA3Yy1kZDc5YzliY2Q2YWQvIiwiaWF0IjoxNTkwMDg3NjI3LCJuYmYiOjE1OTAwODc2MjcsImV4cCI6MTU5MDA5MTUyNywiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IjQyZGdZRmowcEZKd2x0SE5uNUd1bjFtUDlZbVVkejYwaUF3SXpHQzVrcXJ0NmpSWmxCOEEiLCJhbXIiOlsicHdkIl0sImFwcF9kaXNwbGF5bmFtZSI6IlRlYW1zU3RhdHVzIiwiYXBwaWQiOiI4NWZiNGQ3NC04OThmLTRmNTctOTM0ZS1hMTgxMTM2NGRiMzUiLCJhcHBpZGFjciI6IjAiLCJmYW1pbHlfbmFtZSI6IktpbG1pc3RlciIsImdpdmVuX25hbWUiOiJKb2huIiwiaXBhZGRyIjoiNTEuMTQ2Ljg5LjExMyIsIm5hbWUiOiJKb2huIEtpbG1pc3RlciIsIm9pZCI6ImEzYmVhNWQ5LTE4OGQtNDlkNS1iOWYzLWE2MmRhNjJjMDdkNyIsIm9ucHJlbV9zaWQiOiJTLTEtNS0yMS0xOTM2MTcxNzM5LTEyOTUyNDEyMzUtMjA0MzgzNzYwLTM5NDYiLCJwbGF0ZiI6IjE0IiwicHVpZCI6IjEwMDMwMDAwOTNFQURBQzgiLCJzY3AiOiJQcmVzZW5jZS5SZWFkIiwic2lnbmluX3N0YXRlIjpbImttc2kiXSwic3ViIjoid0dhR1ZzaEdsV3JHM3I2QjRxQW1vZGFMVXp0dlJsVHZXMDB3SEJCQ2FkcyIsInRpZCI6IjQ1NTgwNjJiLWY5ZWYtNDJmNS1iMDdjLWRkNzljOWJjZDZhZCIsInVuaXF1ZV9uYW1lIjoiSm9obi5LaWxtaXN0ZXJAcHVyZWd5bS5jb20iLCJ1cG4iOiJKb2huLktpbG1pc3RlckBwdXJlZ3ltLmNvbSIsInV0aSI6IjVRUUxiNk9MdGthekF5Tjc3ZUFDQUEiLCJ2ZXIiOiIxLjAiLCJ4bXNfdGNkdCI6MTM3NjU1MTc0M30.Ucy3moiLwXf9Fir3F6NM5jyye35K1SAQEDUzmv0R9tMIfN_5Lmr6_pkq_vVrvXYeLaM5ADvla3xCwreVLQmVQXayDD2phxYOHQklX7Rh9XpP9AXkBH9AjqE2WWIVJx4AC4Bz0-Zp6kThuRY-0CP9mSJFaOmuz3TcCdNGAxxXQMzKPAry6FmICho5celm6TzRw0wuOoGZJyLbRFhKrm52bTz_EhOCQNCDZipezx9xH2KR7SceDRLCZ--Asas3U6q95eeN8VbMCBbIUi1j8YWBro8sca3iSGNnvxnd_3bEx7n5Zd8lqslntWURo-8hwd5WB5xKOcqpE9iAJU_D_XTwYw",
-							"type": "text",
-							"disabled": true
-						},
-						{
 							"key": "refresh_token",
-							"value": "AQABAAAAAAAm-06blBE1TpVMil8KPQ41EDx5dBshbW25Yazo0nqeEYzXTrcGYUqzMqJF9hLO-fs3TuPWM_nuDaa_52ncnFxXo-UNk8hA_5vkzOBGQBL2w0KS6j43KXVRHRix6yhk_B14Pl2SLUxAdPXFuclTvEkewko-zSh6nUJSBvaDY-HI-x2nzzUPyXzFbrfx2y97OEN86Y0Ra273ku86Shens0gVYUffWcRIBTXA3DuwshHv-8VsbSR-c3OvM6As_o5Bwt0gobqo8lKgXNH1Dxmtb4m2hUL4hMw8efEZEchuGO37sfN-Wkq6TC4wqa9uOK1WE8DcoHx_BG7hIGTu2Mrm-ndLs02TIzeBDmmMn-DzTtpnfNYQXlXs8e2t91ucs_uzdXXZECkL1cLfBfBkojk-PJH-dKyGp6QxfIJtnj8Ypo_EAhG_4yQB1KUBSZC9EP_s27c5_ZKu-7WkX7bp_us7JOjL9JS5fGcItBBjn9ENevnqfoc42rdaazv9a44m9su8s25ogXQcNBbjt4IEk1zhD8znK6sx4QgSZAtqJEDA9Od4tpW13iM_wrPkSsmCxXMrBUbpnoyaJLUUZ0VtOorXpJfg8iOgDVXJfZmxI65NVFLuf26VFkQjsrIvRajTcE2S_Y9fsfS30xSJ_Y52yk6uThcuQtKKHC4PU52W83BijdMszSmQgPAAqiqhDv-gAIRBkgpoCLEelq8JmDveltwHxAVpl5mQXJG3zhSvRkvxWds3mfAlLYeImCcpj0pZubH3o3nGOTzkLKu_pN_OmxqpBNT5RD3D0hKoe1Uyy7Zpyhz2KUvvCx0fDtZPn2GwrKXedWFknePMW0_8iBGK5adkgmI80fEItZfjIBgPXWGO0PBGORH5ixeu5-SDRzLrrjcivyEgAA",
+							"value": "{{RefreshToken}}",
 							"type": "text"
 						}
-					]
+					],
+					"options": {
+						"urlencoded": {}
+					}
 				},
 				"url": {
-					"raw": "https://login.microsoftonline.com/4558062b-f9ef-42f5-b07c-dd79c9bcd6ad/oauth2/token",
+					"raw": "https://login.microsoftonline.com/{{TenantId}}/oauth2/token",
 					"protocol": "https",
 					"host": [
 						"login",
@@ -192,7 +211,7 @@
 						"com"
 					],
 					"path": [
-						"4558062b-f9ef-42f5-b07c-dd79c9bcd6ad",
+						"{{TenantId}}",
 						"oauth2",
 						"token"
 					]
@@ -205,7 +224,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "e96dbb28-d44c-41b7-baca-0d935a351547",
+				"id": "31f607c6-35a7-4a6b-afaa-a85be98c6209",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -215,7 +234,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "a324b439-c5ea-4328-ab76-894fd0fd3018",
+				"id": "bebb3323-1ce4-4de4-8e24-e6622d3da18b",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -225,31 +244,31 @@
 	],
 	"variable": [
 		{
-			"id": "eb61b148-7992-46fc-8a83-ec9ca0305eaa",
+			"id": "6f7e51be-72cf-4aca-ba78-b3db0e4b23e7",
 			"key": "ClientId",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "2f57eeb4-4e64-4d34-aca7-a9d695309ab7",
+			"id": "c9926f8e-a32b-4746-b283-b86febb793e7",
 			"key": "TenantId",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "694512b5-05d9-4f2f-a861-6be3d28a42b0",
+			"id": "da80b2a2-471c-4d9d-bff0-05508d0e650d",
 			"key": "DeviceCode",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "b32a3ec0-1edd-48b4-b54b-79cfc6fb0215",
+			"id": "153efee8-2c3e-4a86-bda3-416d416f1657",
 			"key": "AccessToken",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "cc59e13e-70f6-4195-932e-2fe370f38d11",
+			"id": "5aba4bb8-dabb-4b02-9c43-751720e1a074",
 			"key": "RefreshToken",
 			"value": "",
 			"type": "string"
