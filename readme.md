@@ -7,9 +7,9 @@ This sample demonstrates how to use OAuth Device Code Flow with the Microsoft Gr
 To try out the MS Graph API see the [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer)
 
 ## Azure SetUp
-This sample reads data from your Microsoft account and in order to use this sample you will first need to set up an App in Azure. You can use a free account for this.
+This sample reads data from your Microsoft account and in order to use this sample you will first need to register an App in Azure. You can use a free account for this.
 
-[View App Setup Guide](###)
+[View App Registration Guide](appRegistration.md)
 
 ## PostMan Collection
 To make it easy to view the API requests needed and ensure everything is configured correctly a  [postman collection](https://www.postman.com/collection/) is included.
