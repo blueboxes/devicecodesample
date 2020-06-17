@@ -16,7 +16,7 @@ To make it easy to view the API requests needed and ensure everything is configu
 
 Import the [Postman collection file (v2.1)](device_auth.postman_collection.json) into [Postman App](https://postman.com). A full guide on how to import can be found on the [Postman site](https://learning.postman.com/docs/postman/collections/importing-and-exporting-data/).
 
-Edit the collection and navigate to the `Variables` tab. Enter the  tenantId and clientId and select 'Udpate'. Once this is done you can run each request in teh collection in order.
+Edit the collection and navigate to the `Variables` tab. Enter the  tenantId and clientId and select 'Udpate'. Once this is done you can run each request in the collection in order.
 
 ## Node App Installation and Setup
 
